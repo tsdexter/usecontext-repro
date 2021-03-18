@@ -11,6 +11,7 @@ import { useStaticQuery, graphql } from "gatsby"
 
 import Header from "./header"
 import "./layout.css"
+import TestContext from "../context/test"
 
 const Layout = ({ children }) => {
   const data = useStaticQuery(graphql`
@@ -23,8 +24,10 @@ const Layout = ({ children }) => {
     }
   `)
 
+  const [testValue, setTestValue] = React.useState(0)
+
   return (
-    <>
+    <TestContext.Provider value={{ testValue, setTestValue }}>
       <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
       <div
         style={{
@@ -33,6 +36,12 @@ const Layout = ({ children }) => {
           padding: `0 1.0875rem 1.45rem`,
         }}
       >
+        <button
+          style={{ marginBottom: 20 }}
+          onClick={() => setTestValue(testValue + 1)}
+        >
+          Update TestContext value
+        </button>
         <main>{children}</main>
         <footer
           style={{
@@ -44,7 +53,7 @@ const Layout = ({ children }) => {
           <a href="https://www.gatsbyjs.com">Gatsby</a>
         </footer>
       </div>
-    </>
+    </TestContext.Provider>
   )
 }
 
